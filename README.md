@@ -1,2 +1,2 @@
-# Wordpress + Mysql
+# Wordpress + Mysql + Traefik
 Wordpress+mysql
