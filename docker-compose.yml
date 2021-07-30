@@ -1,0 +1,47 @@
+version: '3.7'
+
+volumes: 
+  db-wp:
+    
+services:
+  
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: 'seusenha' 
+    volumes:
+       - /opt/sites/eusoutech:/var/www/html
+    networks:
+      - traefik
+    restart: always
+    depends_on: 
+      - mysql
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wordpress.rule=Host(`blog.eusoutech.com.br`)"
+      - "traefik.http.routers.wordpress.tls=true"
+      - "traefik.http.routers.wordpress.tls.certresolver=ssl"
+  
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    networks:
+      - traefik   
+    volumes:
+      - db-wp:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 'suasenha'
+      MYSQL_ROOT_PASSWORD: 'sua-senha-de-root'
+  
+networks: 
+  traefik:
+    external: true
+    
+
